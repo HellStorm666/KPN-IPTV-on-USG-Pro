@@ -2,12 +2,6 @@
     "system": {
         "task-scheduler": {
             "task": {
-		"postprovisionoptimize": {
-                        "executable": {
-                        "path": "/config/scripts/post-config.d/optimize.sh"
-                    },
-                    "interval": "1m"
-                },
                 "postprovision": {
                 	"executable": {
                         "path": "/config/scripts/post-config.d/dhcp6.sh"
@@ -19,16 +13,16 @@
                         "path": "/config/scripts/post-config.d/setroutes.sh"
                     },
                     "interval": "2m"
+                },
+                "postprovisionoptimize": {
+                	"executable": {
+                        "path": "/config/scripts/post-config.d/optimize.sh"
+                    },
+                    "interval": "2m"
                 }
             }
         },
         "offload": {
-            "ipv4": {
-                     "forwarding": "enable",
-                     "gre": "enable",
-                     "pppoe": "enable",
-                     "vlan": "enable"
-            },
             "ipv6": {
                     "forwarding": "enable",
                     "pppoe": "enable",
@@ -73,7 +67,7 @@
     },
     "interfaces": {
         "ethernet": {
-            "eth0": {
+            "eth2": {
                 "dhcp-options": {
                     "default-route": "no-update",
                     "default-route-distance": "1",
@@ -97,8 +91,7 @@
                         },
                         "ip": {
                             "source-validation": "loose"
-                        },
-                        "mtu": "1500"
+                        }
                     },
                     "6": {
                         "firewall": {
@@ -139,6 +132,7 @@
                                     "dup-addr-detect-transmits": "1",
                                     "enable": "''"
                                 },
+								"mtu": "1500",
                                 "name-server": "auto",
                                 "password": "kpn",
                                 "user-id": "kpn"
@@ -147,7 +141,11 @@
                     }
                 }
             },
-            "eth1": {
+            "eth0": {
+			"address": [
+					"192.168.2.1/24",
+					"2a02:a452:60dc::1/64"
+                ],
                 "description": "LAN",
                 "ipv6": {
                     "address": {
@@ -160,18 +158,18 @@
                         "managed-flag": "true",
                         "max-interval": "600",
                         "name-server": [
-                        	"2606:4700:4700::1111",
-                        	"2606:4700:4700::1001"
+                        	"2a02:a452:60dc::250"
                         ],
                         "other-config-flag": "false",
                         "prefix": {
-                            "::/64": {
+                            "2a02:a452:60dc::/64": {
                                 "autonomous-flag": "true",
                                 "on-link-flag": "true",
-                                "valid-lifetime": "2592000"
+                                "preferred-lifetime": "14400",
+                                "valid-lifetime": "86400"
                             }
                         },
-                        "radvd-options": "RDNSS 2606:4700:4700::1111 2606:4700:4700::1001 {};",
+                        "radvd-options": "RDNSS 2a02:a452:60dc::250 {};",
                         "reachable-time": "0",
                         "retrans-timer": "0",
                         "send-advert": "true"
@@ -183,20 +181,28 @@
     "protocols": {
         "igmp-proxy": {
             "interface": {
-                "eth0.4": {
+                "eth2.4": {
                     "alt-subnet": [
                         "0.0.0.0/0"
                     ],
                     "role": "upstream",
                     "threshold": "1"
                 },
-                "eth1": {
+                "eth0.40": {
                     "alt-subnet": [
                         "0.0.0.0/0"
                     ],
                     "role": "downstream",
                     "threshold": "1"
-                }
+                },
+				"eth0": {
+					"role": "disabled",
+					"threshold": "1"
+				},
+				"eth0.5": {
+					"role": "disabled",
+					"threshold": "1"
+				}
             }
         },
         "static": {
@@ -228,7 +234,7 @@
                         "address": "0.0.0.0/0"
                     },
                     "log": "disable",
-                    "outbound-interface": "eth0.4",
+                    "outbound-interface": "eth2.4",
                     "protocol": "all",
                     "type": "masquerade"
                 },
