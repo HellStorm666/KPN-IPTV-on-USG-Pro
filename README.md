@@ -1,3 +1,5 @@
+This is copy of Coolhva's readme. I wil add/change the points were needed asap.
+
 # Ubiquiti USG with KPN FTTH, IPTV and IPv6
 This repo contains the files you need to succesfully configure the USG with KPN FTTH with IPTV and IPv6 enabled.
 
