@@ -33,7 +33,8 @@ EndOfFile
 
 echo "$ROUTES" | base64 -d > /etc/dhcp3/dhclient-exit-hooks.d/routes
 chmod +x /etc/dhcp3/dhclient-exit-hooks.d/routes
-renew dhcp interface eth0.4
+release dhcp interface eth2.4
+renew dhcp interface eth2.4
 restart igmp-proxy
 fi
 
